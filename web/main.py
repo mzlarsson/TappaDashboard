@@ -1,4 +1,4 @@
-import json
+import os
 from scripts.summary import get_summary
 from flask import Flask, request, render_template, send_from_directory
 app = Flask(__name__)
@@ -29,4 +29,9 @@ def page_not_found(e):
     return "404. Oh noes nothing here!"
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=9898, debug=False)
+    cert_pem_file = os.environ.get("CERT_PEM_FILE", None)
+    key_pem_file = os.environ.get("KEY_PEM_FILE", None)
+    if cert_pem_file and key_pem_file:
+        app.run(host="0.0.0.0", port=9898, ssl_context=(cert_pem_file, key_pem_file), debug=False)
+    else:
+        app.run(host="0.0.0.0", port=9898, debug=False)

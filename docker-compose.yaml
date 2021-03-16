@@ -14,5 +14,7 @@ services:
     volumes:
       - ./web:/app
       - ./data:/data
+    env_file:
+      - web.env
 
 
