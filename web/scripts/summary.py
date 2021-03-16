@@ -1,6 +1,7 @@
 import os
 import json
 from functools import reduce
+from datetime import datetime, timezone, timedelta
 
 # 15 March 00:00:00 GMT+1
 START_TIME = 1615762800
@@ -25,7 +26,7 @@ def get_summary(data_path):
         days = (data["timestamp"] - START_TIME) / (24*60*60)
 
         for player in data["players"]:
-            
+
             # Hack since Isabelle does not seem to be in the right team
             if player["team"] is None and player["name"].startswith("Isabelle"):
                 player["team"] = "Let\u2019s walk"
@@ -57,7 +58,7 @@ def get_summary(data_path):
         result["stats"]["total_steps"] = reduce(lambda sum, el: sum + el["total_steps"], result["teams"], 0)
         result["stats"]["total_dist"] = round(reduce(lambda sum, el: sum + el["total_dist"], result["teams"], 0), 1)
         result["stats"]["average_steps"] = round(result["stats"]["total_steps"] / days / len(result["players"]))
-        
+        result["stats"]["last_update"] = datetime.fromtimestamp(data["timestamp"], timezone(timedelta(hours=1))).strftime('%Y-%m-%d %H:%M:%S')
 
     result["teams"].sort(key=lambda t: t["average_steps"], reverse=True)
 
