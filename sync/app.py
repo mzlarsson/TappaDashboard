@@ -41,7 +41,7 @@ def sync_data():
                     print_status("Could not close driver")
 
         print_status("Waiting 10 minutes until next sync")
-        sleep(10*60*1000)
+        sleep(600)
 
 
 if __name__ == "__main__":
