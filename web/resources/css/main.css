@@ -49,9 +49,11 @@ div.team-table {
     margin:auto;
 }
 div.team-table span {
-    display:inline-block;
+    display:flex;
     padding: 2px 10px;
     border: 1px solid #ffffff50;
+    justify-content: center;
+    align-items: center;
 }
 div.team-table span.table-header {
     font-weight: bold;
@@ -72,6 +74,44 @@ div.team-table span.table-header {
 /* Mobile screen, portrait AND landscape mode */
 @media only screen and (max-width: 600px), (max-height: 600px) {
 
+    #summary-wrapper {
+        position:unset;
+        top:unset;
+        left:unset;
+        bottom:unset;
+        right:unset;
+        display:block;
+    }
+
+    .general-stats {
+        padding-bottom: 2em;
+    }
+    .general-stats-header {
+        margin-top:1em !important;
+    }
+
+    .team-wrapper {
+        padding-bottom: 2em;
+        border-right: none;
+        border-left: none;
+        border-bottom:none;
+        border-color:#ffffff88;
+        border-top-style: dashed;
+    }
+
+    .team-name {
+        margin-top: 1em;
+    }
+    .team-steps {
+        font-size: 3em;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+
+    div.team-table {
+        width: 100%;
+        margin:0;
+    }
 }
 
 /* Mobile screen, portrait mode */

@@ -2,6 +2,9 @@
 It would be nice with a Dashboard without login for Tappa. Let's do some Selenium magic
 and a simple dashboard with flask.
 
+## How to use
+Simply update the `sync.env` files with your credentials and run `docker-compose up -d`.
+
 ## Licensing
 This code is published under the MIT license.
 
