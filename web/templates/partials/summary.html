@@ -1,0 +1,50 @@
+
+
+<div class = "general-stats">
+    <div class = "general-stats-header centered">
+        General stats
+    </div>
+    <div class = "stats-days centered">
+        {{ data.stats.days }} days
+    </div>
+    <div class = "stats-steps centered">
+        {{ "{:,}".format(data.stats.total_steps) }} steps
+    </div>
+    <div class = "stats-distance centered">
+        {{ data.stats.total_dist }}km
+    </div>
+    <div class = "stats-avg-steps centered">
+        {{ "{:,}".format(data.stats.average_steps) }} steps/person
+    </div>
+</div>
+
+{% for team in data.teams %}
+
+    <div class = "team-wrapper">
+
+        <div class = "team-name centered">
+            {{ team.name }}
+        </div>
+
+        <div class = "team-steps centered">
+            {{ "{:,}".format(team.average_steps) }} steps
+        </div>
+        
+        <div class = "team-table">
+            <span class = "table-header">Name</span>
+            <span class = "table-header centered">Distance</span>
+            <span class = "table-header centered">Steps</span>
+            <span class = "table-header centered">Steps/Day</span>
+
+            {% for player in team.players %}
+            
+                <span>{{ player.name }}</span>
+                <span class = "centered">{{ player.distance }}km</span>
+                <span class = "centered">{{ "{:,}".format(player.steps) }}</span>
+                <span class = "centered">{{ "{:,}".format(player.average_steps) }}</span>
+            
+            {% endfor %}
+        </div>
+    </div>
+        
+{% endfor %}

@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  sync:
+    build: ./sync
+    env_file:
+      - sync.env
+    volumes:
+      - ./sync:/app
+      - ./data:/data
+  web:
+    build: ./web
+    ports:
+      - "9898:9898"
+    volumes:
+      - ./web:/app
+      - ./data:/data
+
+

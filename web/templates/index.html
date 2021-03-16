@@ -1,0 +1,25 @@
+{% extends "base/template_main.html" %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    <div id = "summary-wrapper"></div>
+
+    <script type = "text/javascript">
+        reloadSummary();
+
+        let reloadInterval = 30000;
+        if (reloadInterval != 0){
+            setInterval(reloadSummary, reloadInterval);
+        }
+
+        function reloadSummary(){
+            $("#summary-wrapper").load(`/summary/`, (response, status, xhr) => {
+                if (status == "error") {
+                    $("#summary-wrapper").html("Got an error while loading data :(");
+                }
+            });
+        }
+    </script>
+{% endblock %}
