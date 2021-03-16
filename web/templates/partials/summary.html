@@ -1,6 +1,6 @@
 <!-- Data updated {{ data.stats.last_update }} -->
 
-<div class = "general-stats">
+<div class = "general-stats summary-box">
     <div class = "general-stats-header centered">
         General stats
     </div>
@@ -20,7 +20,7 @@
 
 {% for team in data.teams %}
 
-    <div class = "team-wrapper">
+    <div class = "team-wrapper summary-box">
 
         <div class = "team-name centered">
             {{ team.name }}
@@ -46,5 +46,18 @@
             {% endfor %}
         </div>
     </div>
+    
+    <script>
+        reloadSettings();
+
+        function reloadSettings(){
+            let bgColor = settingsGet("settings.color.background");
+            let fgColor = settingsGet("settings.color.foreground");
+            let borderColor = settingsGet("settings.color.border");
+            let playerBorderColor = settingsGet("settings.color.player-border");
+            $(".summary-box").css("background-color", bgColor).css("color", fgColor).css("border-color", borderColor);
+            $("div.team-table span").css("border-color", playerBorderColor);
+        }
+    </script>
         
 {% endfor %}

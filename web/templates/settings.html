@@ -1,0 +1,77 @@
+{% extends "base/template_main.html" %}
+
+{% block head %}
+    <link href="/css/settings.css" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+
+    <a href = "/" class = "corner-link left">
+        <img src = "/imgs/back.png">
+    </a>
+
+    <div class = "settings-wrapper">
+        <div class = "settings-header">
+            Settings
+        </div>
+        <div class = "settings-row">
+            <div class = "settings-name">Background color:</div>
+            <div class = "settings-input">
+                <input type = "text" id = "bg-color-setting">
+            </div>
+        </div>
+        <div class = "settings-row">
+            <div class = "settings-name">Foreground color:</div>
+            <div class = "settings-input">
+                <input type = "text" id = "fg-color-setting">
+            </div>
+        </div>
+        <div class = "settings-row">
+            <div class = "settings-name">Border color:</div>
+            <div class = "settings-input">
+                <input type = "text" id = "border-color-setting">
+            </div>
+        </div>
+        <div class = "settings-row spacing-top">
+            <div class = "settings-name">Player table border:</div>
+            <div class = "settings-input">
+                <input type = "text" id = "player-border-color-setting">
+            </div>
+        </div>
+        <div class = "settings-submit-row">
+            <input type = "button" value = "Reset" onclick = "settingsReset();loadSettings();reloadSummary();">
+            <input type = "button" value = "Save" onclick = "saveSettings();reloadSummary();">
+        </div>
+        
+        <div id = "summary-wrapper" class = "small"></div>
+    </div>
+
+
+    <script type = "text/javascript">
+        loadSettings();
+        reloadSummary();
+
+        function loadSettings(){
+            $("#bg-color-setting").val(settingsGet("settings.color.background"));
+            $("#fg-color-setting").val(settingsGet("settings.color.foreground"));
+            $("#border-color-setting").val(settingsGet("settings.color.border"));
+            $("#player-border-color-setting").val(settingsGet("settings.color.player-border"));
+        }
+
+        function saveSettings(){
+            settingsSet("settings.color.background", $("#bg-color-setting").val());
+            settingsSet("settings.color.foreground", $("#fg-color-setting").val());
+            settingsSet("settings.color.border", $("#border-color-setting").val());
+            settingsSet("settings.color.player-border", $("#player-border-color-setting").val());
+        }
+
+        function reloadSummary(){
+            $("#summary-wrapper").load(`/summary/`, (response, status, xhr) => {
+                $("#summary-wrapper").show();
+                if (status == "error") {
+                    $("#summary-wrapper").html("Got an error while loading data :(");
+                }
+            });
+        }
+    </script>
+{% endblock %}

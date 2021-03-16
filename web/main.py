@@ -11,6 +11,10 @@ def main():
 def summary():
     data = get_summary("/data/result.json")
     return render_template('partials/summary.html', data=data)
+    
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
 
 @app.route('/js/<path:path>')
 def send_js(path):

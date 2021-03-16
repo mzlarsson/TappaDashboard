@@ -1,0 +1,64 @@
+#summary-wrapper.small {
+    /* Dont take up entire page */
+    position:unset;
+    top:unset;
+    left:unset;
+    bottom:unset;
+    right:unset;
+
+    margin:auto;
+    margin-top: 30px;
+    width: 400px;
+    height: 300px;
+    overflow: hidden;
+    font-size: 4px;
+}
+
+.settings-wrapper {
+    width: 60%;
+    margin:auto;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.settings-header {
+    font-size: 2em;
+    margin-bottom: 1em;
+}
+.settings-row {
+    margin-bottom: 10px;
+}
+.settings-row.spacing-top {
+    margin-top: 20px;
+}
+.settings-row .settings-name {
+    display: inline-block;
+    width: 200px;
+    text-align:right;
+}
+.settings-row .settings-input {
+    display: inline-block;
+    vertical-align: top;
+}
+.settings-row .settings-input input[type=text],
+.settings-row .settings-input select {
+    width: 200px;
+    padding: 5px 10px;
+}
+
+.settings-submit-row {
+    text-align:center;
+}
+.settings-submit-row input {
+    min-width: 150px;
+    padding: 6px 12px;
+    margin-top: 20px;
+}
+
+
+/* Mobile screen, portrait AND landscape mode */
+@media only screen and (max-width: 600px), (max-height: 600px) {
+    .settings-wrapper {
+        width: 100%;
+    }
+}
