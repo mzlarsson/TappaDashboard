@@ -2,6 +2,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from time import sleep
 import json
 import time
+import datetime
 
 
 def print_status(category, msg):
@@ -83,3 +84,8 @@ def update_data(driver, username, password, folder="/data/"):
     with open(out_file, "w") as out:
         json.dump(save_data, out, indent=4)
     print_status("SAVE", "File written to %s" % out_file)
+
+    daily_file = "%s/%s.json" % (folder, datetime.datetime.now().strftime("%Y%m%d"))
+    with open(daily_file, "w") as out:
+        json.dump(save_data, out, indent=4)
+    print_status("SAVE", "Saved to daily file as well")
