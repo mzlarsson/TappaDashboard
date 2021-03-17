@@ -1,12 +1,12 @@
 import os
 import json
 from functools import reduce
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, date, timezone, timedelta
 
 # 15 March 00:00:00 GMT+1
 START_TIME = 1615762800
 
-def get_summary(data_path):
+def get_summary(data_folder):
     result = {
         "teams": [],
         "players": [],
@@ -18,12 +18,21 @@ def get_summary(data_path):
         }
     }
 
+    data_path = "%s/result.json" % (data_folder)
     if os.path.exists(data_path):
 
         with open(data_path, "r") as data_file:
             data = json.load(data_file)
 
-        days = (data["timestamp"] - START_TIME) / (24*60*60)
+        yesterday_date = (date.today() - timedelta(days=1)).strftime("%Y%m%d")
+        yesterday_file = "%s/%s.json" % (data_folder, yesterday_date)
+        if os.path.exists(yesterday_file):
+            with open(yesterday_file, "r") as data_file:
+                yesterday = json.load(data_file)
+        else:
+            yesterday = {}
+
+        days = int((data["timestamp"] - START_TIME) / (24*60*60))
 
         for player in data["players"]:
 
@@ -44,17 +53,22 @@ def get_summary(data_path):
                 })
                 player_team = result["teams"][-1]
 
-            player["average_steps"] = round(player["steps"] / days)
+            player_yesterday = {}
+            player_search = list(filter(lambda p: p["name"] == player["name"], yesterday.get("players", [])))
+            if player_search:
+                player_yesterday = player_search[0]
+
+            player["diff_steps"] = player["steps"] - player_yesterday.get("steps", 0)
             player_team["players"].append(player)
             result["players"].append(player)
 
         for team in result["teams"]:
-            team["total_steps"] = reduce(lambda sum, el: sum + el["steps"], team["players"], 0)
+            team["total_steps"] = reduce(lambda sum, el: sum + el["steps"]*days, team["players"], 0)
             team["total_dist"] = reduce(lambda sum, el: sum + el["distance"], team["players"], 0)
             team["average_steps"] = round(team["total_steps"] / len(team["players"]) / days)
             team["average_dist"] = round(team["total_dist"] / len(team["players"]) / days, 1)
 
-        result["stats"]["days"] = round(days, 2)
+        result["stats"]["days"] = days
         result["stats"]["total_steps"] = reduce(lambda sum, el: sum + el["total_steps"], result["teams"], 0)
         result["stats"]["total_dist"] = round(reduce(lambda sum, el: sum + el["total_dist"], result["teams"], 0), 1)
         result["stats"]["average_steps"] = round(result["stats"]["total_steps"] / days / len(result["players"]))

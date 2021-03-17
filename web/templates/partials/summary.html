@@ -33,15 +33,15 @@
         <div class = "team-table">
             <span class = "table-header">Name</span>
             <span class = "table-header centered">Distance</span>
-            <span class = "table-header centered">Steps</span>
+            <span class = "table-header centered">Today</span>
             <span class = "table-header centered">Steps/Day</span>
 
             {% for player in team.players %}
             
                 <span>{{ player.name }}</span>
                 <span class = "centered">{{ player.distance }}km</span>
+                <span class = "centered">{{ "{:,}".format(player.diff_steps) }}</span>
                 <span class = "centered">{{ "{:,}".format(player.steps) }}</span>
-                <span class = "centered">{{ "{:,}".format(player.average_steps) }}</span>
             
             {% endfor %}
         </div>

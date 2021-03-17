@@ -9,7 +9,7 @@ def main():
 
 @app.route('/summary/')
 def summary():
-    data = get_summary("/data/result.json")
+    data = get_summary("/data/")
     return render_template('partials/summary.html', data=data)
     
 @app.route('/settings')
