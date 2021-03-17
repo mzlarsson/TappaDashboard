@@ -58,7 +58,19 @@ def get_summary(data_folder):
             if player_search:
                 player_yesterday = player_search[0]
 
-            player["diff_steps"] = player["steps"] - player_yesterday.get("steps", 0)
+            # ----------- REASONING REGARDING DIFF STEPS ----------------------------
+            # AllTimeSteps[n] = sum(day.Steps) for n first days
+            # This means for example AllTimeSteps[2] = (DailySteps[0] + DailySteps[1] + DailySteps[2]) / Days
+            # The yesterday array contains AllTimeSteps[1] = (DailySteps[0] + DailySteps[1] + 0) / days
+            # The today array contains AllTimeSteps[2] = (DailySteps[0] + DailySteps[1] + DailySteps[2]) / days
+            # In order to retrieve DailySteps[2], we see that it must be that
+            # AllTimeSteps[2] - AllTimeSteps[1] = DailySteps[2] / days
+            # Hence it should be that
+            # DailySteps[2] = (AllTimeSteps[2] - AllTimeSteps[1]) * days
+            # This also means we will lose more and more precision the longer time goes (since the value is scaled down).
+            # Day 2 the precision is every two steps. Day 27 we can only get as close as 27 steps. Sadface.
+            # -----------------------------------------------------------------------
+            player["diff_steps"] = (player["steps"] - player_yesterday.get("steps", 0)) * days
             player_team["players"].append(player)
             result["players"].append(player)
 
