@@ -3,7 +3,8 @@ var settingsDefault = {
     "settings.color.background": "#000000",
     "settings.color.foreground": "#ffffff",
     "settings.color.border": "#008000",
-    "settings.color.player-border": "#ffffff50"
+    "settings.color.player-border": "#ffffff50",
+    "settings.calc.strategy": "optimistic"
 };
 
 function settingsReset(){

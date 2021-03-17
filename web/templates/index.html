@@ -20,7 +20,8 @@
         }
 
         function reloadSummary(){
-            $("#summary-wrapper").load(`/summary/`, (response, status, xhr) => {
+            let calcStrategy = settingsGet("settings.calc.strategy");
+            $("#summary-wrapper").load(`/summary/?strategy=${calcStrategy}`, (response, status, xhr) => {
                 if (status == "error") {
                     $("#summary-wrapper").html("Got an error while loading data :(");
                 }

@@ -6,7 +6,7 @@ from datetime import datetime, date, timezone, timedelta
 # 15 March 00:00:00 GMT+1
 START_TIME = 1615762800
 
-def get_summary(data_folder):
+def get_summary(data_folder, strategy=None):
     result = {
         "teams": [],
         "players": [],
@@ -32,7 +32,17 @@ def get_summary(data_folder):
         else:
             yesterday = {}
 
-        days = int((data["timestamp"] - START_TIME) / (24*60*60))
+        actual_days = (data["timestamp"] - START_TIME) / (24*60*60)
+        full_days = int(actual_days)
+        if strategy == "pessimistic":
+            days = int(actual_days) + 1
+            day_decimals = 0
+        elif strategy == "exact":
+            days = actual_days
+            day_decimals = 2
+        else:
+            days = int(actual_days)
+            day_decimals = 0
 
         for player in data["players"]:
 
@@ -58,29 +68,25 @@ def get_summary(data_folder):
             if player_search:
                 player_yesterday = player_search[0]
 
-            # ----------- REASONING REGARDING DIFF STEPS ----------------------------
-            # AllTimeSteps[n] = sum(day.Steps) for n first days
-            # This means for example AllTimeSteps[2] = (DailySteps[0] + DailySteps[1] + DailySteps[2]) / Days
-            # The yesterday array contains AllTimeSteps[1] = (DailySteps[0] + DailySteps[1] + 0) / days
-            # The today array contains AllTimeSteps[2] = (DailySteps[0] + DailySteps[1] + DailySteps[2]) / days
-            # In order to retrieve DailySteps[2], we see that it must be that
-            # AllTimeSteps[2] - AllTimeSteps[1] = DailySteps[2] / days
-            # Hence it should be that
-            # DailySteps[2] = (AllTimeSteps[2] - AllTimeSteps[1]) * days
-            # This also means we will lose more and more precision the longer time goes (since the value is scaled down).
-            # Day 2 the precision is every two steps. Day 27 we can only get as close as 27 steps. Sadface.
-            # -----------------------------------------------------------------------
-            player["diff_steps"] = (player["steps"] - player_yesterday.get("steps", 0)) * days
+            # Tappa gives us average value as of full days. E.g. On the third day we get -> 2 days
+            all_time_steps = player["steps"] * full_days
+            all_time_steps_midnight = player_yesterday.get("steps", 0) * full_days
+
+            player["total_steps"] = all_time_steps
+            player["diff_steps"] = all_time_steps - all_time_steps_midnight
+            player["average_steps"] = round(all_time_steps / days)
+
             player_team["players"].append(player)
             result["players"].append(player)
 
         for team in result["teams"]:
-            team["total_steps"] = reduce(lambda sum, el: sum + el["steps"]*days, team["players"], 0)
+            team["total_steps"] = reduce(lambda sum, el: sum + el["total_steps"], team["players"], 0)
             team["total_dist"] = reduce(lambda sum, el: sum + el["distance"], team["players"], 0)
             team["average_steps"] = round(team["total_steps"] / len(team["players"]) / days)
             team["average_dist"] = round(team["total_dist"] / len(team["players"]) / days, 1)
 
-        result["stats"]["days"] = days
+        result["stats"]["actual_days"] = actual_days
+        result["stats"]["days"] = round(days, day_decimals)
         result["stats"]["total_steps"] = reduce(lambda sum, el: sum + el["total_steps"], result["teams"], 0)
         result["stats"]["total_dist"] = round(reduce(lambda sum, el: sum + el["total_dist"], result["teams"], 0), 1)
         result["stats"]["average_steps"] = round(result["stats"]["total_steps"] / days / len(result["players"]))

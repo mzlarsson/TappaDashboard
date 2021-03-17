@@ -9,7 +9,8 @@ def main():
 
 @app.route('/summary/')
 def summary():
-    data = get_summary("/data/")
+    strategy = request.args.get("strategy", None)
+    data = get_summary("/data/", strategy)
     return render_template('partials/summary.html', data=data)
     
 @app.route('/settings')

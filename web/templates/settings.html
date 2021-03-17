@@ -38,6 +38,16 @@
                 <input type = "text" id = "player-border-color-setting">
             </div>
         </div>
+        <div class = "settings-row spacing-top">
+            <div class = "settings-name">Average strategy:</div>
+            <div class = "settings-input">
+                <select id = "average-calculation-setting">
+                    <option value = "pessimistic" title = "E.g. on day 3 it has gone 3 days">Pessimistic</option>
+                    <option value = "optimistic" title = "E.g. during day 3 it has gone 2 days" selected>Optimistic</option>
+                    <option value = "exact" title = "E.g. after 2.85 days it has gone 2.85 days">Exact</option>
+                </select>
+            </div>
+        </div>
         <div class = "settings-submit-row">
             <input type = "button" value = "Reset" onclick = "settingsReset();loadSettings();reloadSummary();">
             <input type = "button" value = "Save" onclick = "saveSettings();reloadSummary();">
@@ -56,6 +66,7 @@
             $("#fg-color-setting").val(settingsGet("settings.color.foreground"));
             $("#border-color-setting").val(settingsGet("settings.color.border"));
             $("#player-border-color-setting").val(settingsGet("settings.color.player-border"));
+            $("#average-calculation-setting").val(settingsGet("settings.calc.strategy"));
         }
 
         function saveSettings(){
@@ -63,10 +74,12 @@
             settingsSet("settings.color.foreground", $("#fg-color-setting").val());
             settingsSet("settings.color.border", $("#border-color-setting").val());
             settingsSet("settings.color.player-border", $("#player-border-color-setting").val());
+            settingsSet("settings.calc.strategy", $("#average-calculation-setting").val());
         }
 
         function reloadSummary(){
-            $("#summary-wrapper").load(`/summary/`, (response, status, xhr) => {
+            let calcStrategy = settingsGet("settings.calc.strategy");
+            $("#summary-wrapper").load(`/summary/?strategy=${calcStrategy}`, (response, status, xhr) => {
                 $("#summary-wrapper").show();
                 if (status == "error") {
                     $("#summary-wrapper").html("Got an error while loading data :(");
